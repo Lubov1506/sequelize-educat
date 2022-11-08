@@ -12,6 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "sequelize": "^6.25.4"
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.25.5"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.5.2"
   }
 }
