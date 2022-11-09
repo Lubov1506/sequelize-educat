@@ -10,14 +10,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   Task.init(
     {
-      userId: {
-
-      },
       body: {
         allowNull: false,
         type: DataTypes.STRING,
         validate:{
-          notEmpty:true
+          notEmpty: true
         }
       },
       isDone: {
