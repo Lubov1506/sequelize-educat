@@ -1,28 +1,67 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const {isAfter} = require('date-fns')
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
+    static associate (models) {}
   }
-  User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.TEXT,
-    birthday: DataTypes.DATEONLY,
-    gender: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+  User.init(
+    {
+      firstName: {
+        field: 'first_name',
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate:{
+          notEmpty: true,
+          notNull: true
+        }
+      },
+      lastName: { 
+        field: 'last_name',
+        allowNull: false,
+        type: DataTypes.STRING ,
+        validate:{
+          notEmpty: true,
+          notNull: true
+        }
+      },
+      email: { 
+        allowNull: false,
+        unique: true,
+        type: DataTypes.STRING ,
+        validate:{
+          notEmpty: true,
+          notNull: true,
+          isEmail:true
+        }
+      },
+      password: { 
+        field: 'password_hash',
+        allowNull: false,
+        type: DataTypes.TEXT 
+      },
+      birthday: { 
+        type: DataTypes.DATEONLY ,
+        validate:{
+          notNull: true,
+          isDate: true,
+          isValidDate(value){
+            if(isAfter(new Date(value), new Date())){
+              throw new Error('can`t be after then today')
+            }
+          }
+        }
+      },
+      gender: { 
+        type: DataTypes.STRING 
+      }
+    },
+    {
+      sequelize,
+      modelName: 'User',
+      tableName: 'users',
+      underscored: true
+    }
+  );
   return User;
 };
