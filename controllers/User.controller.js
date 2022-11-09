@@ -51,11 +51,11 @@ module.exports.updateUser = async (req, res, next) => {
 module.exports.updateUserInstance = async (req, res, next) => {
     const {
       body,
-      params: { id }
+      userInstance: user
     } = req;
   
     try {
-      const user = await User.findByPK(id)
+
       const updatedUser = await user.update(body);
   
       res.status(200).send({data: updatedUser});
