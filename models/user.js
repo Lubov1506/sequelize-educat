@@ -1,6 +1,7 @@
 'use strict';
 const {isAfter} = require('date-fns')
 const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate (models) {}
@@ -42,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       birthday: { 
         type: DataTypes.DATEONLY ,
+        allowNull: false,
         validate:{
           notNull: true,
           isDate: true,
