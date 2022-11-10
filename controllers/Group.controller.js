@@ -26,7 +26,7 @@ module.exports.getUserGroups = async (req, res, next) => {
 
     if(!userGroups){
         throw new Error('Empty user')
-    }
+    } 
   } catch (err) {
     next(err);
   }

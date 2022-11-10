@@ -1,24 +1,25 @@
 const { User } = require('../models');
+const createError = require('http-errors');
 
 module.exports.createUser = async (req, res, next) => {
   try {
     const { body } = req;
     const createdUser = await User.create(body);
-    res.status(200).send({data: createdUser});
+    res.status(200).send({ data: createdUser });
   } catch (err) {
     next(err);
   }
 };
 module.exports.getAllUsers = async (req, res, next) => {
   try {
-    const {pagination = {}} = req
+    const { pagination = {} } = req;
     const arrayUsers = await User.findAll({
       attributes: {
         exclude: ['password']
       },
       ...pagination
     });
-    res.status(201).send({data: arrayUsers});
+    res.status(201).send({ data: arrayUsers });
   } catch (err) {
     next(err);
   }
@@ -29,7 +30,12 @@ module.exports.getUser = async (req, res, next) => {
   } = req;
   try {
     const returnedUser = await User.findByPk(id);
-    res.status(200).send({data: returnedUser});
+    
+    if (!returnedUser) {
+      const err = createError(404, 'User not found');
+      return next(err)
+    }
+    res.status(200).send({ data: returnedUser });
   } catch (err) {
     next(err);
   }
@@ -48,27 +54,23 @@ module.exports.updateUser = async (req, res, next) => {
       returning: ['id', 'first_name', 'last_name']
     });
 
-    res.status(200).send({data: updatedUser});
+    res.status(200).send({ data: updatedUser });
   } catch (err) {
     next(err);
   }
 };
 
 module.exports.updateUserInstance = async (req, res, next) => {
-    const {
-      body,
-      userInstance: user
-    } = req;
-  
-    try {
+  const { body, userInstance: user } = req;
 
-      const updatedUser = await user.update(body);
-  
-      res.status(200).send({data: updatedUser});
-    } catch (err) {
-      next(err);
-    }
-  };
+  try {
+    const updatedUser = await user.update(body);
+
+    res.status(200).send({ data: updatedUser });
+  } catch (err) {
+    next(err);
+  }
+};
 
 module.exports.deleteUser = async (req, res, next) => {
   const {
@@ -80,7 +82,7 @@ module.exports.deleteUser = async (req, res, next) => {
         id: id
       }
     });
-    res.status(200).send({data: deletedUser});
+    res.status(200).send({ data: deletedUser });
   } catch (err) {
     next(err);
   }
