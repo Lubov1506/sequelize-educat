@@ -22,7 +22,7 @@ module.exports.getUser = async (req, res, next) => {
     params: { id }
   } = req;
   try {
-    const returnedUser = await User.findByPK(id);
+    const returnedUser = await User.findByPk(id);
     res.status(200).send({data: returnedUser});
   } catch (err) {
     next(err);
