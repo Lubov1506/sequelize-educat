@@ -11,7 +11,13 @@ module.exports.createUser = async (req, res, next) => {
 };
 module.exports.getAllUsers = async (req, res, next) => {
   try {
-    const arrayUsers = await User.findAll();
+    const {pagination = {}} = req
+    const arrayUsers = await User.findAll({
+      attributes: {
+        exclude: ['password']
+      },
+      ...pagination
+    });
     res.status(201).send({data: arrayUsers});
   } catch (err) {
     next(err);
