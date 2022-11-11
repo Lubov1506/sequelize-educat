@@ -5,6 +5,7 @@ const groupRouter = Router();
 
 groupRouter.post('/', GroupController.createUsersGroup)
 groupRouter.get('/:userId', GroupController.getUserGroups)
+groupRouter.get('/:groupId', GroupController.addUserGroup)
 
 
 
