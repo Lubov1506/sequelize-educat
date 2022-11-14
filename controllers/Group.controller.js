@@ -34,36 +34,6 @@ module.exports.getUserGroups = async (req, res, next) => {
   }
 };
 
-module.exports.addUserGroup = async (req,res, next) =>{
-
-  try{
-    const {body: {userId}, params:{groupId}} = req
-    const userInstance = await User.findByPk(userId)
-    const groupInstance = await Group.findByPk(groupId)
-    groupInstance.addUser(userInstance)
-
-    const groupWithUsers =await Group.findAll({
-      where:{
-        id: groupId
-      },
-      include:[
-        {
-          model: User,
-          through: {
-            attributes: []
-          }
-        }
-      ],
-      attributes:{
-        exclude: ['password']
-      }
-    })
-    res.status(200).send(groupWithUsers)
-  }catch(err){
-    next(err)
-  }
-}
-/* 
 module.exports.addUserGroup = async (req, res, next) => {
   try {
     const {
@@ -90,7 +60,28 @@ module.exports.addUserGroup = async (req, res, next) => {
         exclude: ['password']
       }
     });
+    res.status(200).send(groupWithUsers);
   } catch (err) {
     next(err);
   }
-}; */
+};
+module.exports.createImage = async (req, res, next) => {
+  try {
+    const {
+      file: { filename },
+      params: { groupId }
+    } = req;
+    const [count, [updatedGroup]] = await Group.update(
+      { imagePath: filename },
+      {
+        where: {
+          id: groupId
+        },
+        returning: true
+      }
+    );
+    res.send(updatedGroup);
+  } catch (err) {
+    next(err);
+  }
+};
